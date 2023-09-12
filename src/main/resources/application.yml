@@ -15,5 +15,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 server:
   port: 8888
-
+logging:
+  level:
+    org.apache.catalina.core.ContainerBase: off
 

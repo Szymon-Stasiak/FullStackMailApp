@@ -1,5 +1,6 @@
 package com.example.fullstackmailapp.user;
 
+import com.example.fullstackmailapp.mail.Mail;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,8 +30,22 @@ public class User  implements UserDetails {
     private String email;
     private String password;
 
+    @OneToMany(mappedBy = "sender"
+            ,cascade = CascadeType.ALL
+            ,orphanRemoval = true
+            ,fetch = FetchType.LAZY)
+    private List<Mail> sentMails =new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver"
+            ,cascade = CascadeType.ALL
+            ,orphanRemoval = true
+            ,fetch = FetchType.LAZY)
+    private List<Mail> receivedMails =new ArrayList<>();
+
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,7 +1,6 @@
 package com.example.fullstackmailapp.auth;
 
 
-import com.example.fullstackmailapp.UserAlreadyExistsException;
 import com.example.fullstackmailapp.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,11 +14,14 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService service;
-       private final UserRepository userRepository;
+    private final UserRepository userRepository;
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
     ) {
+        if(userRepository.findByEmail(request.getEmail()).isPresent()){
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
         return ResponseEntity.ok(service.register(request));
     }
 
@@ -30,7 +32,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
     @GetMapping("/works")
-public String works(){
+    public String works(){
         return "works";
     }
 }
